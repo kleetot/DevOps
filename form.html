@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Job Form </title>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+<script>
+function SubForm (){
+    $.ajax({
+        url:'https://api.apispreadsheets.com/data/KDzr1twgne8VMmZS/',
+        type:'post',
+        data:$("#myForm").serializeArray(),
+        success: function(){
+          alert("Form Submitted Successfully!")
+        },
+        error: function(){
+          alert("Error: Form Not Submitted")
+        }
+    });
+}
+</script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+    body{
+        text-align: center;
+        background-color: #FA8BFF;
+        background-image: linear-gradient(45deg, #FA8BFF 0%, #2BD2FF 52%, #2BFF88 90%);
+        font-family: 'Roboto', sans-serif;
+    }
+    input{
+        border-top: 1px;
+        border-left: none;
+        border-right:none;
+    }
+    #form{
+        background-color: white;
+        margin: 50px 350px 100px 350px;
+        padding: 40px 0 100px 0;
+        border-radius: 10px;
+        width: auto;
+        height: auto;
+    }
+    button{
+        background-color: #FA8BFF;
+        background-image: linear-gradient(90deg, #FA8BFF 0%, #2BD2FF 52%, #2BFF88 90%);
+        border:none;
+        color: white;
+        padding:20px 0 20px 0;
+        border-radius: 20px;
+        width:75%;
+        height:75%;
+        text-align: center;
+        font-size:25px;
+        text-decoration: none;
+    }
+
+    button:hover{
+        background-color: #FA8BFF;
+        background-image: linear-gradient(45deg, #FA8BFF 0%, #2BD2FF 52%, #2BFF88 90%);
+
+    }
+    .writeInInputs{
+        padding-top:10px;   
+    }
+    .writeInInputs input{
+        width:75%;
+        border-top: 1px;
+        border-left: none;
+        border-right:none;
+        padding:15px;
+        text-align: left;
+    }
+
+    .writeInInputs h3{
+       text-align:left;
+       padding-left:12%;
+
+    }
+    #buttonBreak{
+        padding:75px;
+
+    }
+  </style>
+</head>
+<body>
+<div id="form"> 
+  <form id="myForm">
+    <h1><label>JOB FORM</label></h1>
+        <div class="writeInInputs">
+            <h3><label>Job</label></h3>
+            <input name="Job" placeholder="Enter the Title of the Job" />
+           
+            <h3><label>Company</label></h3>
+            <input name="Company" placeholder="Enter the Name of the Company"/>
+            
+            <h3><label>Link<label></h3>
+            <input name="Link" placeholder="Enter the Link to the Job Posting">
+        </div>     
+  </form>
+  <div id="buttonBreak">
+        <button onclick="SubForm()">  Add Job </button>
+    </div>
+    <a href="display.html" target="_blank"> Check out the queue </a> 
+</div>
+</body>
+
+
+<body>
+	<div id="hero">
+		<h1>Jobs</h1>
+		
+	</div>	
+
+	<div id="display">
+		<div id="loader"> 
+			<h4> Loading</h4> 
+		</div>
+		<div id="allJobs">
+		</div>
+		<div id="errorMessage"> 
+			<h2> Failed to get data. Please refresh </h2>
+		</div>
+	</div>
+	
+	<script>
+		let allJobsElm = document.getElementById("allJobs")
+		let loaderElm = document.getElementById("loader")
+		let errorMessageElm = document.getElementById("errorMessage")
+		
+		function setErrorDisplay(){
+			loaderElm.style.display = "none"
+			allJobsElm.style.display = "none"
+			errorMessageElm.style.display = "block"
+		}
+			
+		fetch("https://api.apispreadsheets.com/data/KDzr1twgne8VMmZS/").then(res=>{
+			if (res.status === 200){
+				res.json().then(data=>{
+					const yourData = data["data"]
+					for(let i = 0; i < yourData.length; i++){
+						let rowInfo = yourData[i]
+
+						let rowInfoDiv = document.createElement("div")
+						rowInfoDiv.classList.add("job-row")
+
+						let rowJob = document.createElement("h2")
+						let rowJobNode = document.createTextNode(rowInfo["Job"])
+						rowJob.appendChild(rowJobNode)
+						rowJob.classList.add("Job")
+
+						let rowCompany = document.createElement("h4")
+						let rowCompanyNode = document.createTextNode(rowInfo["Company"])
+						rowCompany.appendChild(rowCompanyNode)
+						rowCompany.classList.add("Company")
+
+						let rowLink = document.createElement("a")
+						rowLink.setAttribute("href", rowInfo["Link"])
+						rowLink.setAttribute("target","_blank")
+						let rowLinkNode = document.createTextNode(rowInfo["Link"])
+						rowLink.appendChild(rowLinkNode)
+						rowLink.classList.add("Link")
+
+						rowInfoDiv.appendChild(rowJob)
+						rowInfoDiv.appendChild(rowCompany)
+						rowInfoDiv.appendChild(rowLink)
+								
+						allJobsElm.appendChild(rowInfoDiv)
+
+					}
+					
+					loaderElm.style.display = "none"
+					allJobsElm.style.display = "block"
+					errorMessageElm.style.display = "none"
+
+				}).catch(err => {
+					setErrorDisplay()
+				})
+			}
+			else{
+				setErrorDisplay()
+			}
+		}).catch(err =>{
+			setErrorDisplay()
+		})
+	</script>
+</body>
+</html>
