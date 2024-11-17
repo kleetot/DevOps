@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>DJ Song Form </title>
+<title>Job Form </title>
 <script
   src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
@@ -9,7 +9,7 @@
 <script>
 function SubForm (){
     $.ajax({
-        url:'https://api.apispreadsheets.com/data/12633/',
+        url:'https://api.apispreadsheets.com/data/KDzr1twgne8VMmZS/',
         type:'post',
         data:$("#myForm").serializeArray(),
         success: function(){
@@ -89,7 +89,7 @@ function SubForm (){
   <form id="myForm">
     <h1><label>JOB FORM</label></h1>
         <div class="writeInInputs">
-            <h3><label>Job Title</label></h3>
+            <h3><label>Job</label></h3>
             <input name="Job Title" placeholder="Enter the Title of the Job" />
            
             <h3><label>Company</label></h3>
@@ -109,7 +109,7 @@ function SubForm (){
 
 <body>
 	<div id="hero">
-		<h1>DJ Song Queue</h1>
+		<h1>Jobs</h1>
 		
 	</div>	
 
@@ -117,28 +117,28 @@ function SubForm (){
 		<div id="loader"> 
 			<h4> Loading</h4> 
 		</div>
-		<div id="allSongs">
+		<div id="allJobs">
 		</div>
 		<div id="errorMessage"> 
 			<h2> Failed to get data. Please refresh </h2>
 		</div>
 	</div>
-	<a href="form.html" target="_blank" style="text-decoration: none; color:white;"> Fill out another song request </a> 
+	<a href="form.html" target="_blank" style="text-decoration: none; color:white;"> Fill out another job </a> 
 	<footer>
 		<h4> Powered by <a href="https://www.apispreadsheets.com" target="_blank" style="text-decoration: none; color:white; text-align: center;"> API Spreadsheets </a> </h4>
 	</footer>
 	<script>
-		let allSongsElm = document.getElementById("allSongs")
+		let allJobsElm = document.getElementById("allJobs")
 		let loaderElm = document.getElementById("loader")
 		let errorMessageElm = document.getElementById("errorMessage")
 		
 		function setErrorDisplay(){
 			loaderElm.style.display = "none"
-			allSongsElm.style.display = "none"
+			allJobsElm.style.display = "none"
 			errorMessageElm.style.display = "block"
 		}
 			
-		fetch("https://api.apispreadsheets.com/data/12633/").then(res=>{
+		fetch("https://api.apispreadsheets.com/data/KDzr1twgne8VMmZS/").then(res=>{
 			if (res.status === 200){
 				res.json().then(data=>{
 					const yourData = data["data"]
@@ -146,18 +146,18 @@ function SubForm (){
 						let rowInfo = yourData[i]
 
 						let rowInfoDiv = document.createElement("div")
-						rowInfoDiv.classList.add("song-row")
+						rowInfoDiv.classList.add("job-row")
 
 					
-						let rowSong = document.createElement("h2")
-						let rowSongNode = document.createTextNode(rowInfo["Song"])
-						rowSong.appendChild(rowSongNode)
-						rowSong.classList.add("Song")
+						let rowJob = document.createElement("h2")
+						let rowJobNode = document.createTextNode(rowInfo["Job"])
+						rowJob.appendChild(rowJobNode)
+						rowJob.classList.add("Job")
 
-						let rowArtist = document.createElement("h4")
-						let rowArtistNode = document.createTextNode(rowInfo["Artist"])
-						rowArtist.appendChild(rowArtistNode)
-						rowArtist.classList.add("Artist")
+						let rowCompany = document.createElement("h4")
+						let rowCompanyNode = document.createTextNode(rowInfo["Company"])
+						rowCompany.appendChild(rowCompanyNode)
+						rowCompany.classList.add("Company")
 
 						let rowLink = document.createElement("a")
 						rowLink.setAttribute("href", rowInfo["Link"])
@@ -166,16 +166,16 @@ function SubForm (){
 						rowLink.appendChild(rowLinkNode)
 						rowLink.classList.add("Link")
 
-						rowInfoDiv.appendChild(rowSong)
-						rowInfoDiv.appendChild(rowArtist)
+						rowInfoDiv.appendChild(rowJob)
+						rowInfoDiv.appendChild(rowCompany)
 						rowInfoDiv.appendChild(rowLink)
 								
-						allSongsElm.appendChild(rowInfoDiv)
+						allJobsElm.appendChild(rowInfoDiv)
 
 					}
 					
 					loaderElm.style.display = "none"
-					allSongsElm.style.display = "block"
+					allJobsElm.style.display = "block"
 					errorMessageElm.style.display = "none"
 
 				}).catch(err => {
