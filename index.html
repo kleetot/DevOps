@@ -186,28 +186,20 @@ function SubForm() {
 		}
 
         function deleteRow(rowID) {
-            // Replace 'yourDeleteEndpoint' with the actual API endpoint for deleting
-            fetch(`https://api.apispreadsheets.com/data/KDzr1twgne8VMmZS/${rowID}`, {
-                method: 'DELETE', // Use the correct HTTP method
-            })
-            .then(res => {
-                if (res.status === 200) {
-                    // SUCCESS
-                    alert("Successfully Deleted");
-                    location.reload(); // Refresh to update the displayed data
-                } else {
-                    // ERROR
-                    res.json().then(err => {
-                        console.error("Error Details:", err);
-                        alert("Error Deleting! Check console for details.");
-                    });
-                }
-            })
-            .catch(err => {
-                console.error("Network Error:", err);
-                alert("Error Deleting! Check console for details.");
-            });
-        }
+			fetch("https://api.apispreadsheets.com/data/Bbezu5oZETmX0GIV/?query=delete from Bbezu5oZETmX0GIV where ID="+ rowID.toString()).then(res=>{
+				if (res.status === 200){
+					// SUCCESS
+					alert("Successfully Deleted")
+					location.reload();
+				}
+				else{
+					// ERROR
+					alert("Error Deleting!")
+				}
+			}).catch(err => {
+				alert("Error Deleting!")
+			})
+		}
 
 			
 		fetch("https://api.apispreadsheets.com/data/KDzr1twgne8VMmZS/").then(res=>{
