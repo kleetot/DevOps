@@ -7,16 +7,23 @@
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
 <script>
-function SubForm (){
+function SubForm() {
+    // Generate a unique ID (e.g., timestamp or UUID)
+    const uniqueID = Date.now(); // Simple unique ID using the current timestamp
+    // Append the ID to the form data
+    const formData = $("#myForm").serializeArray();
+    formData.push({ name: "ID", value: uniqueID });
+    // Submit the form with the additional ID field
     $.ajax({
-        url:'https://api.apispreadsheets.com/data/KDzr1twgne8VMmZS/',
-        type:'post',
-        data:$("#myForm").serializeArray(),
-        success: function(){
-          alert("Form Submitted Successfully!")
+        url: 'https://api.apispreadsheets.com/data/KDzr1twgne8VMmZS/',
+        type: 'post',
+        data: formData,
+        success: function () {
+            alert("Form Submitted Successfully!");
+            location.reload(); // Reload to reflect the new job
         },
-        error: function(){
-          alert("Error: Form Not Submitted")
+        error: function () {
+            alert("Error: Form Not Submitted");
         }
     });
 }
@@ -116,6 +123,15 @@ function SubForm (){
         background-color: #007BFF; /* Optional: Add a background color */
         text-decoration: underline;
     }
+    .job-table .deleteButton{
+	display: inline-block;
+	background-color: #9D1535;
+	color: white;
+	border:none;
+	padding:2px;
+	margin-left:5px;
+	text-align: center;
+    }
 
   </style>
 </head>
@@ -145,7 +161,6 @@ function SubForm (){
 <body>
 	<div id="hero">
 		<h1>Job List</h1>
-		
 	</div>	
 
 	<div id="display">
@@ -169,6 +184,31 @@ function SubForm (){
 			allJobsElm.style.display = "none"
 			errorMessageElm.style.display = "block"
 		}
+
+        function deleteRow(rowID) {
+            // Replace 'yourDeleteEndpoint' with the actual API endpoint for deleting
+            fetch(`https://api.apispreadsheets.com/data/KDzr1twgne8VMmZS/${rowID}`, {
+                method: 'DELETE', // Use the correct HTTP method
+            })
+            .then(res => {
+                if (res.status === 200) {
+                    // SUCCESS
+                    alert("Successfully Deleted");
+                    location.reload(); // Refresh to update the displayed data
+                } else {
+                    // ERROR
+                    res.json().then(err => {
+                        console.error("Error Details:", err);
+                        alert("Error Deleting! Check console for details.");
+                    });
+                }
+            })
+            .catch(err => {
+                console.error("Network Error:", err);
+                alert("Error Deleting! Check console for details.");
+            });
+        }
+
 			
 		fetch("https://api.apispreadsheets.com/data/KDzr1twgne8VMmZS/").then(res=>{
 			if (res.status === 200){
@@ -180,7 +220,7 @@ function SubForm (){
 
             let headerRow = document.createElement("tr");
 
-            let headers = ["Job", "Company", "Link"];
+            let headers = ["Job", "Company", "Link to Posting", "Remove Job"];
             headers.forEach(headerText => {
                 let th = document.createElement("th");
                 th.textContent = headerText;
@@ -215,13 +255,20 @@ function SubForm (){
                 linkCell.appendChild(link);
                 row.appendChild(linkCell);
 
+                // Delete button cell
+                let deleteCell = document.createElement("td");
+                let rowDeleteButton = document.createElement("button");
+                rowDeleteButton.setAttribute("onclick", "deleteRow(" + rowInfo["ID"].toString() + ")");
+                rowDeleteButton.textContent = "Delete Job";
+                rowDeleteButton.classList.add("deleteButton");
+                deleteCell.appendChild(rowDeleteButton);
+                row.appendChild(deleteCell); // Append the cell to the row
+
                 table.appendChild(row);
-            }
+        }
 
             // Append the table to a container element
             allJobsElm.appendChild(table);
-
-					
 					loaderElm.style.display = "none"
 					allJobsElm.style.display = "block"
 					errorMessageElm.style.display = "none"
