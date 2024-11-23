@@ -124,13 +124,14 @@ function SubForm() {
         text-decoration: underline;
     }
     .job-table .deleteButton{
-	display: inline-block;
-	background-color: #9D1535;
-	color: white;
-	border:none;
-	padding:2px;
-	margin-left:5px;
-	text-align: center;
+        display: inline-block;
+        background-color: #9D1535;
+        color: white;
+        border:none;
+        padding:5px 10px;
+        margin-left:5px;
+        text-align: center;
+        border-radius: 5px;
     }
 
   </style>
@@ -240,10 +241,22 @@ function SubForm() {
 
                 // Link cell
                 let linkCell = document.createElement("td");
+                let linkButton = document.createElement("button");
+
+                linkButton.textContent = "View Job"; // Button text
+                linkButton.style.cursor = "pointer"; // Optional: Change cursor to a pointer
+                linkButton.style.backgroundColor = "#9D1535"; // Optional: Add button styling
+                linkButton.style.color = "white";
+                linkButton.style.border = "none";
+                linkButton.style.padding = "5px 10px";
+                linkButton.style.borderRadius = "5px";
+
                 let link = document.createElement("a");
                 link.setAttribute("href", rowInfo["Link"]);
-                link.setAttribute("target", "_blank");
-                link.textContent = "View Job"; // Display text instead of the full URL
+                link.setAttribute("target", "_blank"); // Open in a new tab
+                link.style.textDecoration = "none"; // Remove underline
+                link.appendChild(linkButton);
+
                 linkCell.appendChild(link);
                 row.appendChild(linkCell);
 
