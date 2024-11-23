@@ -82,6 +82,33 @@ function SubForm (){
         padding:75px;
 
     }
+    /* Center the table container */
+    .all-jobs-container {
+        display: flex;
+        justify-content: center; /* Centers horizontally */
+        align-items: center; /* Centers vertically */
+        height: 100vh; /* Takes full viewport height */
+        margin: 0; /* Removes default body margin */
+    }
+
+    /* Table Styling */
+    .job-table {
+        width: 80%; /* Optional: Adjust width as needed */
+        border-collapse: collapse;
+        margin: 0 auto; /* Keeps the table centered in its container */
+    }
+
+    .job-table th, .job-table td {
+        border: 1px solid #f3aae5;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .job-table th {
+        background-color: #e1c1ec;
+        font-weight: bold;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+    }
   </style>
 </head>
 <body>
@@ -139,36 +166,53 @@ function SubForm (){
 			if (res.status === 200){
 				res.json().then(data=>{
 					const yourData = data["data"]
-					for(let i = 0; i < yourData.length; i++){
-						let rowInfo = yourData[i]
+                                // Create a table and header row
+            let table = document.createElement("table");
+            table.classList.add("job-table");
 
-						let rowInfoDiv = document.createElement("div")
-						rowInfoDiv.classList.add("job-row")
+            let headerRow = document.createElement("tr");
 
-						let rowJob = document.createElement("h2")
-						let rowJobNode = document.createTextNode(rowInfo["Job"])
-						rowJob.appendChild(rowJobNode)
-						rowJob.classList.add("Job")
+            let headers = ["Job", "Company", "Link"];
+            headers.forEach(headerText => {
+                let th = document.createElement("th");
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
 
-						let rowCompany = document.createElement("h4")
-						let rowCompanyNode = document.createTextNode(rowInfo["Company"])
-						rowCompany.appendChild(rowCompanyNode)
-						rowCompany.classList.add("Company")
+            table.appendChild(headerRow);
 
-						let rowLink = document.createElement("a")
-						rowLink.setAttribute("href", rowInfo["Link"])
-						rowLink.setAttribute("target","_blank")
-						let rowLinkNode = document.createTextNode(rowInfo["Link"])
-						rowLink.appendChild(rowLinkNode)
-						rowLink.classList.add("Link")
+            // Iterate over yourData and add rows to the table
+            for (let i = 0; i < yourData.length; i++) {
+                let rowInfo = yourData[i];
 
-						rowInfoDiv.appendChild(rowJob)
-						rowInfoDiv.appendChild(rowCompany)
-						rowInfoDiv.appendChild(rowLink)
-								
-						allJobsElm.appendChild(rowInfoDiv)
+                let row = document.createElement("tr");
+                row.classList.add("job-row");
 
-					}
+                // Job cell
+                let jobCell = document.createElement("td");
+                jobCell.textContent = rowInfo["Job"];
+                row.appendChild(jobCell);
+
+                // Company cell
+                let companyCell = document.createElement("td");
+                companyCell.textContent = rowInfo["Company"];
+                row.appendChild(companyCell);
+
+                // Link cell
+                let linkCell = document.createElement("td");
+                let link = document.createElement("a");
+                link.setAttribute("href", rowInfo["Link"]);
+                link.setAttribute("target", "_blank");
+                link.textContent = "View Job"; // Display text instead of the full URL
+                linkCell.appendChild(link);
+                row.appendChild(linkCell);
+
+                table.appendChild(row);
+            }
+
+            // Append the table to a container element
+            allJobsElm.appendChild(table);
+
 					
 					loaderElm.style.display = "none"
 					allJobsElm.style.display = "block"
